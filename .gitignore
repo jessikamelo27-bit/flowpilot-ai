@@ -1,0 +1,43 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# Database files (local runtime state - never published)
+*.db
+*.db-shm
+*.db-wal
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# Pytest & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS / IDE / Local workspace metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.agents/
+
+# Frontend build & dependencies
+frontend/node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# Local archives & logs
+*.zip
+*.log
