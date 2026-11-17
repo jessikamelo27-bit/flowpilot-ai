@@ -10,7 +10,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-xl border border-slate-800/80 bg-[#11182E]/90 shadow-lg shadow-black/25 backdrop-blur-sm transition-all duration-200",
+        "rounded-lg border border-[#E1E5EA] bg-[#FFFFFF] shadow-[0_1px_2px_rgba(32,36,43,0.04)] transition-colors duration-150",
         className
       )}
       {...props}
@@ -28,7 +28,7 @@ export function CardHeader({
   return (
     <div
       className={cn(
-        "flex items-center justify-between border-b border-slate-800/70 px-5 py-4",
+        "flex items-center justify-between border-b border-[#E1E5EA] px-4 py-3",
         className
       )}
       {...props}
@@ -45,7 +45,10 @@ export function CardTitle({
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={cn("text-sm font-semibold tracking-tight text-slate-100", className)}
+      className={cn(
+        "text-xs font-semibold uppercase tracking-wider text-[#20242B]",
+        className
+      )}
       {...props}
     >
       {children}
@@ -59,14 +62,21 @@ export function CardContent({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("p-5", className)} {...props}>
+    <div className={cn("p-4", className)} {...props}>
       {children}
     </div>
   );
 }
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline" | "danger" | "success" | "amber" | "ghost";
+  variant?:
+    | "primary"
+    | "secondary"
+    | "outline"
+    | "danger"
+    | "success"
+    | "amber"
+    | "ghost";
   size?: "sm" | "md" | "lg";
 }
 
@@ -79,30 +89,30 @@ export function Button({
 }: ButtonProps) {
   const variants: Record<string, string> = {
     primary:
-      "bg-blue-600 hover:bg-blue-500 text-white shadow-sm shadow-blue-950/50 border border-blue-500/40",
+      "bg-[#2457C5] hover:bg-[#1D48A6] text-white border border-[#2457C5]",
     secondary:
-      "bg-violet-600 hover:bg-violet-500 text-white shadow-sm shadow-violet-950/50 border border-violet-500/40",
+      "bg-[#EAF0FC] hover:bg-[#DCE7FA] text-[#2457C5] border border-[#C5D6F7]",
     outline:
-      "bg-slate-900/70 hover:bg-slate-800 text-slate-200 border border-slate-700/80",
+      "bg-[#FFFFFF] hover:bg-[#F4F5F7] text-[#20242B] border border-[#E1E5EA]",
     danger:
-      "bg-rose-600/90 hover:bg-rose-500 text-white border border-rose-500/40",
+      "bg-[#C44F4F] hover:bg-[#AD3E3E] text-white border border-[#C44F4F]",
     success:
-      "bg-emerald-600/90 hover:bg-emerald-500 text-white border border-emerald-500/40",
+      "bg-[#24845A] hover:bg-[#1C6B48] text-white border border-[#24845A]",
     amber:
-      "bg-amber-600/90 hover:bg-amber-500 text-white border border-amber-500/40",
-    ghost: "bg-transparent hover:bg-slate-800/60 text-slate-300",
+      "bg-[#B98220] hover:bg-[#9C6D19] text-white border border-[#B98220]",
+    ghost: "bg-transparent hover:bg-[#F4F5F7] text-[#707783] hover:text-[#20242B]",
   };
 
   const sizes: Record<string, string> = {
-    sm: "px-2.5 py-1.5 text-xs rounded-lg",
-    md: "px-3.5 py-2 text-xs font-medium rounded-lg",
-    lg: "px-4 py-2.5 text-sm font-medium rounded-xl",
+    sm: "px-2.5 py-1 text-xs rounded-md",
+    md: "px-3 py-1.5 text-xs font-medium rounded-md",
+    lg: "px-4 py-2 text-sm font-medium rounded-md",
   };
 
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center gap-1.5 font-medium transition-all duration-150 disabled:opacity-50 disabled:pointer-events-none",
+        "inline-flex items-center justify-center gap-1.5 font-medium transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none",
         variants[variant],
         sizes[size],
         className
@@ -116,17 +126,17 @@ export function Button({
 
 export function StatusBadge({ status }: { status: RequestStateType | string }) {
   const styles: Record<string, string> = {
-    CONCLUIDA: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
-    APROVADA: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
-    EXECUTADA: "bg-blue-500/15 text-blue-300 border-blue-500/30",
-    EM_PROCESSAMENTO: "bg-blue-500/15 text-blue-300 border-blue-500/30",
-    RECEBIDA: "bg-slate-500/15 text-slate-300 border-slate-500/30",
-    AGUARDANDO_APROVACAO: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-    PENDENTE: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-    AGUARDANDO_INFORMACOES: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-    SOLICITAR_INFO: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-    REJEITADA: "bg-rose-500/15 text-rose-300 border-rose-500/30",
-    ERRO: "bg-rose-500/15 text-rose-300 border-rose-500/30",
+    CONCLUIDA: "bg-[#24845A]/10 text-[#24845A] border-[#24845A]/30",
+    APROVADA: "bg-[#24845A]/10 text-[#24845A] border-[#24845A]/30",
+    EXECUTADA: "bg-[#EAF0FC] text-[#2457C5] border-[#2457C5]/30",
+    EM_PROCESSAMENTO: "bg-[#EAF0FC] text-[#2457C5] border-[#2457C5]/30",
+    RECEBIDA: "bg-[#F4F5F7] text-[#707783] border-[#E1E5EA]",
+    AGUARDANDO_APROVACAO: "bg-[#B98220]/10 text-[#B98220] border-[#B98220]/30",
+    PENDENTE: "bg-[#B98220]/10 text-[#B98220] border-[#B98220]/30",
+    AGUARDANDO_INFORMACOES: "bg-[#B98220]/10 text-[#B98220] border-[#B98220]/30",
+    SOLICITAR_INFO: "bg-[#B98220]/10 text-[#B98220] border-[#B98220]/30",
+    REJEITADA: "bg-[#C44F4F]/10 text-[#C44F4F] border-[#C44F4F]/30",
+    ERRO: "bg-[#C44F4F]/10 text-[#C44F4F] border-[#C44F4F]/30",
   };
 
   const labels: Record<string, string> = {
@@ -146,8 +156,8 @@ export function StatusBadge({ status }: { status: RequestStateType | string }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium tracking-wide",
-        styles[status] || "bg-slate-800 text-slate-300 border-slate-700"
+        "inline-flex items-center gap-1.5 rounded border px-2 py-0.5 text-[11px] font-medium whitespace-nowrap",
+        styles[status] || "bg-[#F4F5F7] text-[#707783] border-[#E1E5EA]"
       )}
     >
       <span className="h-1.5 w-1.5 rounded-full bg-current" />
@@ -158,17 +168,17 @@ export function StatusBadge({ status }: { status: RequestStateType | string }) {
 
 export function RiskBadge({ risk }: { risk: RiskLevelType | string }) {
   const styles: Record<string, string> = {
-    BAIXO: "bg-emerald-500/10 text-emerald-400 border-emerald-500/25",
-    MEDIO: "bg-blue-500/10 text-blue-400 border-blue-500/25",
-    ALTO: "bg-amber-500/10 text-amber-400 border-amber-500/25",
-    CRITICO: "bg-rose-500/15 text-rose-400 border-rose-500/35 font-semibold",
+    BAIXO: "bg-[#24845A]/10 text-[#24845A] border-[#24845A]/25",
+    MEDIO: "bg-[#EAF0FC] text-[#2457C5] border-[#2457C5]/25",
+    ALTO: "bg-[#B98220]/10 text-[#B98220] border-[#B98220]/30",
+    CRITICO: "bg-[#C44F4F]/12 text-[#C44F4F] border-[#C44F4F]/35 font-semibold",
   };
 
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium",
-        styles[risk] || "bg-slate-800 text-slate-400 border-slate-700"
+        "inline-flex items-center rounded border px-1.5 py-0.5 text-[11px] font-medium whitespace-nowrap",
+        styles[risk] || "bg-[#F4F5F7] text-[#707783] border-[#E1E5EA]"
       )}
     >
       {risk}
@@ -194,26 +204,28 @@ export function Modal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#20242B]/40 p-4 backdrop-blur-[1px]">
       <div
         className={cn(
-          "relative flex max-h-[90vh] w-full flex-col rounded-2xl border border-slate-700/80 bg-[#0E1529] shadow-2xl shadow-black/60",
+          "relative flex max-h-[90vh] w-full flex-col rounded-lg border border-[#E1E5EA] bg-[#FFFFFF] shadow-xl",
           maxWidth
         )}
       >
-        <div className="flex items-start justify-between border-b border-slate-800 px-6 py-4">
+        <div className="flex items-start justify-between border-b border-[#E1E5EA] px-5 py-3.5 bg-[#F4F5F7]/50">
           <div>
-            <h2 className="text-base font-semibold text-slate-100">{title}</h2>
-            {subtitle && <p className="mt-0.5 text-xs text-slate-400">{subtitle}</p>}
+            <h2 className="text-sm font-semibold text-[#20242B]">{title}</h2>
+            {subtitle && (
+              <p className="mt-0.5 text-xs text-[#707783]">{subtitle}</p>
+            )}
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+            className="rounded p-1 text-[#707783] hover:bg-[#E1E5EA]/60 hover:text-[#20242B]"
           >
             ✕
           </button>
         </div>
-        <div className="overflow-y-auto p-6">{children}</div>
+        <div className="overflow-y-auto p-5">{children}</div>
       </div>
     </div>
   );
@@ -223,13 +235,13 @@ export function SkeletonCard({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "animate-pulse rounded-xl border border-slate-800/60 bg-[#11182E]/60 p-5",
+        "animate-pulse rounded-lg border border-[#E1E5EA] bg-[#FFFFFF] p-4",
         className
       )}
     >
-      <div className="h-3 w-24 rounded bg-slate-800" />
-      <div className="mt-3 h-7 w-16 rounded bg-slate-800" />
-      <div className="mt-3 h-2.5 w-32 rounded bg-slate-800/70" />
+      <div className="h-3 w-24 rounded bg-[#E1E5EA]" />
+      <div className="mt-2.5 h-6 w-16 rounded bg-[#E1E5EA]" />
+      <div className="mt-2.5 h-2.5 w-32 rounded bg-[#F4F5F7]" />
     </div>
   );
 }

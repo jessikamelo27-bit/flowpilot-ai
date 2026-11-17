@@ -40,6 +40,20 @@ O **FlowPilot AI** centraliza as operações administrativas em uma interface Sa
 
 ---
 
+## 🖼️ Capturas de Tela da Interface / Interface Screenshots (Enterprise Operations UI)
+
+| 1. Dashboard Operacional (`/#/`) | 2. Central de Solicitações (`/requests`) |
+| :---: | :---: |
+| ![Dashboard Operacional](docs/screenshots/01-dashboard-operacional.png) | ![Central de Solicitações](docs/screenshots/02-central-solicitacoes.png) |
+| **3. Central de Agentes (`/agents`)** | **4. Monitor de Execução (`/monitor`)** |
+| ![Central de Agentes](docs/screenshots/03-central-agentes.png) | ![Monitor de Execução](docs/screenshots/04-monitor-execucao.png) |
+| **5. Central de Aprovações (`/approvals`)** | **6. Evaluation Lab (`/evaluation`)** |
+| ![Central de Aprovações](docs/screenshots/05-central-aprovacoes.png) | ![Evaluation Lab](docs/screenshots/06-evaluation-lab.png) |
+| **7. Analytics & Relatórios (`/analytics`)** | **8. Configurações & Políticas (`/settings`)** |
+| ![Analytics & Relatórios](docs/screenshots/07-analytics-relatorios.png) | ![Configurações & Políticas](docs/screenshots/08-configuracoes-politicas.png) |
+
+---
+
 ## 4. Engineering Highlights (Destaques de Engenharia)
 
 - **Multi-Agent Orchestration (`orchestrator/workflow.py`)**: Coordena cinco agentes especializados trocando contratos fortemente tipados em Pydantic v2 (`IntakeResult`, `AnalystResult`, `PolicyResult`, `ActionResult`, `SupervisorResult`), com telemetria por etapa persistida na tabela `processing_steps`.

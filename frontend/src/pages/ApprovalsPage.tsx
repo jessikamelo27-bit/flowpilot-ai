@@ -7,7 +7,6 @@ import {
   XCircle,
   HelpCircle,
   AlertTriangle,
-  Crown,
   Activity,
   Clock,
 } from "lucide-react";
@@ -35,7 +34,9 @@ export function ApprovalsPage() {
     decision: "APROVADA" | "REJEITADA" | "SOLICITAR_INFO";
   } | null>(null);
 
-  const [reviewerName, setReviewerName] = useState("Helena Vasconcelos (Diretoria)");
+  const [reviewerName, setReviewerName] = useState(
+    "Helena Vasconcelos (Diretoria)"
+  );
   const [justification, setJustification] = useState("");
 
   const { data, isLoading } = useQuery({
@@ -80,44 +81,48 @@ export function ApprovalsPage() {
 
   if (isLoading || !data) {
     return (
-      <div className="space-y-6">
-        <SkeletonCard className="h-28" />
-        <SkeletonCard className="h-64" />
+      <div className="space-y-4">
+        <SkeletonCard className="h-24" />
+        <SkeletonCard className="h-60" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Summary Header */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Card className="p-4 border-amber-500/30">
-          <span className="text-xs text-slate-400">Aprovações Pendentes</span>
-          <div className="mt-2 text-2xl font-bold text-amber-300">
+    <div className="space-y-5">
+      {/* Compact Governance KPIs */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <Card className="p-3.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#707783]">
+            Solicitações Aguardando Aprovação
+          </span>
+          <div className="mt-1.5 font-mono text-2xl font-bold text-[#B98220]">
             {data.pending_count}
           </div>
-          <p className="mt-1 text-[11px] text-slate-400">
-            Aguardando deliberação humana para retomar o fluxo FSM
+          <p className="mt-0.5 text-[11px] text-[#707783]">
+            Execução bloqueada até deliberação humana formal
           </p>
         </Card>
-        <Card className="p-4 border-violet-500/30">
-          <span className="text-xs text-slate-400">
+        <Card className="p-3.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#707783]">
             Escalonamentos Executivos (&gt; R$ 25.000)
           </span>
-          <div className="mt-2 text-2xl font-bold text-violet-300">
+          <div className="mt-1.5 font-mono text-2xl font-bold text-[#C44F4F]">
             {data.pending.filter((p) => p.is_executive_escalation).length}
           </div>
-          <p className="mt-1 text-[11px] text-slate-400">
+          <p className="mt-0.5 text-[11px] text-[#707783]">
             Regra RULE_PURCHASE_CRITICAL_CAP acionada
           </p>
         </Card>
-        <Card className="p-4 border-emerald-500/30">
-          <span className="text-xs text-slate-400">Decisões Auditadas</span>
-          <div className="mt-2 text-2xl font-bold text-emerald-300">
+        <Card className="p-3.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#707783]">
+            Deliberações Registradas
+          </span>
+          <div className="mt-1.5 font-mono text-2xl font-bold text-[#24845A]">
             {data.decided_count}
           </div>
-          <p className="mt-1 text-[11px] text-slate-400">
-            Histórico consolidado com justificativa obrigatória
+          <p className="mt-0.5 text-[11px] text-[#707783]">
+            Histórico auditado com justificativa e revisor
           </p>
         </Card>
       </div>
@@ -126,21 +131,21 @@ export function ApprovalsPage() {
       <Card>
         <CardHeader>
           <div className="flex items-center gap-2">
-            <ShieldCheck className="h-4 w-4 text-amber-400" />
+            <ShieldCheck className="h-4 w-4 text-[#B98220]" />
             <div>
               <CardTitle>
-                Fila de Deliberação Humana ({data.pending.length})
+                Fila de Aprovação Humana ({data.pending.length})
               </CardTitle>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Nenhuma ferramenta do Action Agent é executada antes da confirmação explícita nesta central
+              <p className="text-[11px] text-[#707783] mt-0.5">
+                Nenhuma ação do Action Agent pode ser executada antes da aprovação registrada nesta central
               </p>
             </div>
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-3.5">
           {data.pending.length === 0 ? (
-            <div className="py-10 text-center text-sm text-slate-400">
+            <div className="py-10 text-center text-xs text-[#707783]">
               Todas as solicitações pendentes já foram deliberadas.
             </div>
           ) : (
@@ -148,65 +153,71 @@ export function ApprovalsPage() {
               <div
                 key={item.approval_id}
                 className={cn(
-                  "rounded-2xl border p-5 transition-all space-y-4",
+                  "rounded-md border p-4 space-y-3",
                   item.is_executive_escalation
-                    ? "border-violet-500/50 bg-gradient-to-r from-violet-950/25 via-[#0E1529] to-[#0E1529]"
-                    : "border-slate-800 bg-[#0B1020]"
+                    ? "border-[#C44F4F]/40 bg-[#C44F4F]/[0.02]"
+                    : "border-[#E1E5EA] bg-[#FFFFFF]"
                 )}
               >
-                {/* Executive Escalation Highlight Banner */}
                 {item.is_executive_escalation && (
-                  <div className="flex items-center gap-2 rounded-xl border border-violet-500/40 bg-violet-500/15 px-3.5 py-2 text-xs font-medium text-violet-200">
-                    <Crown className="h-4 w-4 text-violet-300 shrink-0" />
+                  <div className="flex items-center gap-2 rounded border border-[#C44F4F]/30 bg-[#C44F4F]/10 px-3 py-1.5 text-xs font-medium text-[#C44F4F]">
+                    <AlertTriangle className="h-4 w-4 shrink-0" />
                     <span>
-                      ESCALONAMENTO EXECUTIVO OBRIGATÓRIO (RULE_PURCHASE_CRITICAL_CAP): Solicitação de compra superior a R$ 25.000,00 exige aprovação explícita da Diretoria.
+                      ESCALONAMENTO EXECUTIVO OBRIGATÓRIO (RULE_PURCHASE_CRITICAL_CAP): Valor superior a R$ 25.000,00 exige autorização explícita da Diretoria.
                     </span>
                   </div>
                 )}
 
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                  <div className="space-y-1.5">
-                    <div className="flex flex-wrap items-center gap-2.5">
-                      <span className="font-mono text-xs font-bold text-blue-400">
+                  <div className="space-y-2 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-mono text-xs font-bold text-[#2457C5]">
                         {item.request_id}
                       </span>
-                      <span className="font-mono text-[11px] text-slate-400">
+                      <span className="font-mono text-[11px] text-[#707783]">
                         ({item.approval_id})
                       </span>
-                      <h4 className="text-sm font-bold text-white">
+                      <h4 className="text-sm font-semibold text-[#20242B]">
                         {item.title}
                       </h4>
                       <RiskBadge risk={item.risk_level} />
                       <StatusBadge status={item.status} />
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-4 text-xs text-slate-300">
+                    <div className="flex flex-wrap items-center gap-4 text-xs text-[#707783]">
                       <span>
-                        Solicitante: <strong>{item.requester_name}</strong> ({item.requester_department})
+                        Solicitante:{" "}
+                        <strong className="text-[#20242B]">
+                          {item.requester_name}
+                        </strong>{" "}
+                        ({item.requester_department})
                       </span>
                       <span>
-                        Categoria: <strong>{item.category_label}</strong>
+                        Categoria:{" "}
+                        <strong className="text-[#20242B]">
+                          {item.category_label}
+                        </strong>
                       </span>
                       <span>
                         Valor:{" "}
-                        <strong className="font-mono text-amber-300">
+                        <strong className="font-mono text-[#20242B]">
                           {formatCurrencyBRL(item.amount)}
                         </strong>
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-300 bg-[#11182E]/90 rounded-xl p-3 border border-slate-800/80 mt-2">
+                    <p className="text-xs text-[#20242B] bg-[#F4F5F7] rounded border border-[#E1E5EA] p-3">
                       {item.raw_text}
                     </p>
 
-                    <div className="flex flex-wrap items-center gap-2 pt-1">
-                      <span className="text-[11px] text-slate-400">
-                        Regras Acionadas:
+                    <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                      <span className="text-[11px] text-[#707783] font-medium">
+                        Política Acionada:
                       </span>
                       {item.rule_triggered.split(",").map((rule) => (
                         <span
                           key={rule}
-                          className="inline-flex items-center gap-1 rounded-md border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 font-mono text-[11px] text-amber-300"
+                          className="inline-flex items-center gap-1 rounded border border-[#B98220]/30 bg-[#B98220]/10 px-2 py-0.5 font-mono text-[10px] font-medium text-[#B98220]"
                         >
                           <AlertTriangle className="h-3 w-3" />
                           {rule.trim()}
@@ -215,7 +226,7 @@ export function ApprovalsPage() {
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
+                  {/* Decision Actions */}
                   <div className="flex flex-wrap lg:flex-col gap-2 shrink-0">
                     <Button
                       variant="success"
@@ -227,8 +238,8 @@ export function ApprovalsPage() {
                         })
                       }
                     >
-                      <CheckCircle2 className="h-4 w-4" />
-                      Aprovar & Executar
+                      <CheckCircle2 className="h-3.5 w-3.5" />
+                      Aprovar Solicitação
                     </Button>
                     <Button
                       variant="amber"
@@ -240,8 +251,8 @@ export function ApprovalsPage() {
                         })
                       }
                     >
-                      <HelpCircle className="h-4 w-4" />
-                      Solicitar Informações
+                      <HelpCircle className="h-3.5 w-3.5" />
+                      Solicitar Complemento
                     </Button>
                     <Button
                       variant="danger"
@@ -253,18 +264,18 @@ export function ApprovalsPage() {
                         })
                       }
                     >
-                      <XCircle className="h-4 w-4" />
+                      <XCircle className="h-3.5 w-3.5" />
                       Rejeitar Solicitação
                     </Button>
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
                       onClick={() =>
                         navigate(`/monitor?request_id=${item.request_id}`)
                       }
                     >
-                      <Activity className="h-3.5 w-3.5" />
-                      Ver Linha do Tempo
+                      <Activity className="h-3.5 w-3.5 text-[#2457C5]" />
+                      Monitor de Execução
                     </Button>
                   </div>
                 </div>
@@ -278,45 +289,47 @@ export function ApprovalsPage() {
       <Card>
         <CardHeader>
           <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-slate-400" />
+            <Clock className="h-4 w-4 text-[#707783]" />
             <CardTitle>
-              Histórico de Deliberações Humanas ({data.history.length})
+              Histórico de Deliberações ({data.history.length})
             </CardTitle>
           </div>
         </CardHeader>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-slate-800 bg-[#0B1020]/60 text-[11px] uppercase text-slate-400">
-                <th className="py-3 px-4">Aprovação / Req</th>
-                <th className="py-3 px-4">Título</th>
-                <th className="py-3 px-4">Regra Acionada</th>
-                <th className="py-3 px-4">Decisão</th>
-                <th className="py-3 px-4">Revisor</th>
-                <th className="py-3 px-4">Justificativa</th>
-                <th className="py-3 px-4">Data Decisão</th>
+              <tr className="border-b border-[#E1E5EA] bg-[#F4F5F7] text-[10px] font-semibold uppercase tracking-wider text-[#707783]">
+                <th className="py-2.5 px-3.5">Req ID</th>
+                <th className="py-2.5 px-3.5">Solicitação</th>
+                <th className="py-2.5 px-3.5">Regra Acionada</th>
+                <th className="py-2.5 px-3.5">Decisão</th>
+                <th className="py-2.5 px-3.5">Revisor</th>
+                <th className="py-2.5 px-3.5">Justificativa</th>
+                <th className="py-2.5 px-3.5">Horário</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-[#E1E5EA]">
               {data.history.map((h) => (
-                <tr key={h.approval_id} className="hover:bg-slate-900/50">
-                  <td className="py-3 px-4 font-mono text-blue-400">
+                <tr key={h.approval_id} className="hover:bg-[#F4F5F7]/70">
+                  <td className="py-2.5 px-3.5 font-mono font-semibold text-[#2457C5]">
                     {h.request_id}
                   </td>
-                  <td className="py-3 px-4 text-slate-200">{h.title}</td>
-                  <td className="py-3 px-4 font-mono text-[11px] text-amber-300">
+                  <td className="py-2.5 px-3.5 text-[#20242B] font-medium">
+                    {h.title}
+                  </td>
+                  <td className="py-2.5 px-3.5 font-mono text-[11px] text-[#B98220]">
                     {h.rule_triggered}
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-2.5 px-3.5">
                     <StatusBadge status={h.status} />
                   </td>
-                  <td className="py-3 px-4 text-slate-300">
+                  <td className="py-2.5 px-3.5 text-[#20242B]">
                     {h.reviewer_name || "—"}
                   </td>
-                  <td className="py-3 px-4 text-slate-400 max-w-xs truncate">
+                  <td className="py-2.5 px-3.5 text-[#707783] max-w-xs truncate">
                     {h.decision_justification || "—"}
                   </td>
-                  <td className="py-3 px-4 text-slate-400">
+                  <td className="py-2.5 px-3.5 font-mono text-[11px] text-[#707783]">
                     {formatDateTimeBR(h.decided_at)}
                   </td>
                 </tr>
@@ -332,29 +345,29 @@ export function ApprovalsPage() {
         onClose={() => setActiveSubmission(null)}
         title={
           activeSubmission
-            ? `Confirmar Decisão: ${activeSubmission.decision} (${activeSubmission.approval.request_id})`
+            ? `Confirmar Deliberação: ${activeSubmission.decision} (${activeSubmission.approval.request_id})`
             : ""
         }
-        subtitle="A decisão será gravada de forma imutável no SQLite e retomará imediatamente a Máquina de Estados Finita (FSM)."
+        subtitle="A decisão será registrada no SQLite e retomará a Máquina de Estados Finita (FSM)."
         maxWidth="max-w-lg"
       >
         {activeSubmission && (
           <form onSubmit={handleConfirmDecision} className="space-y-4">
-            <div className="rounded-xl border border-slate-800 bg-[#0B1020] p-3.5 text-xs space-y-1">
-              <div className="font-semibold text-white">
+            <div className="rounded border border-[#E1E5EA] bg-[#F4F5F7] p-3 text-xs space-y-1">
+              <div className="font-semibold text-[#20242B]">
                 {activeSubmission.approval.title}
               </div>
-              <div className="text-slate-400">
+              <div className="text-[#707783]">
                 Solicitante: {activeSubmission.approval.requester_name} • Valor:{" "}
-                <span className="font-mono text-amber-300">
+                <span className="font-mono font-semibold text-[#20242B]">
                   {formatCurrencyBRL(activeSubmission.approval.amount)}
                 </span>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Nome e Cargo do Aprovador *
+              <label className="block text-xs font-medium text-[#20242B] mb-1">
+                Identificação do Aprovador *
               </label>
               <input
                 type="text"
@@ -362,13 +375,13 @@ export function ApprovalsPage() {
                 minLength={2}
                 value={reviewerName}
                 onChange={(e) => setReviewerName(e.target.value)}
-                className="w-full rounded-xl border border-slate-700 bg-[#0B1020] px-3.5 py-2 text-xs text-white"
+                className="w-full rounded-md border border-[#E1E5EA] bg-[#FFFFFF] px-3 py-1.5 text-xs text-[#20242B]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Justificativa de Governança / Parecer *
+              <label className="block text-xs font-medium text-[#20242B] mb-1">
+                Justificativa Formal *
               </label>
               <textarea
                 required
@@ -376,15 +389,15 @@ export function ApprovalsPage() {
                 rows={3}
                 value={justification}
                 onChange={(e) => setJustification(e.target.value)}
-                placeholder="Informe a justificativa gerencial ou quais documentos/dados adicionais o solicitante deve fornecer..."
-                className="w-full rounded-xl border border-slate-700 bg-[#0B1020] p-3 text-xs text-white"
+                placeholder="Informe a justificativa da decisão ou os dados complementares exigidos..."
+                className="w-full rounded-md border border-[#E1E5EA] bg-[#FFFFFF] p-2.5 text-xs text-[#20242B]"
               />
             </div>
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+            <div className="flex justify-end gap-2 pt-3 border-t border-[#E1E5EA]">
               <Button
                 type="button"
-                variant="ghost"
+                variant="outline"
                 onClick={() => setActiveSubmission(null)}
               >
                 Cancelar
@@ -401,7 +414,7 @@ export function ApprovalsPage() {
                 disabled={decideMutation.isPending}
               >
                 {decideMutation.isPending
-                  ? "Processando Retomada..."
+                  ? "Processando..."
                   : `Confirmar ${activeSubmission.decision}`}
               </Button>
             </div>

@@ -238,31 +238,34 @@ export interface PolicyRuleRecord {
 
 export interface EvaluationCaseResult {
   case_id: string;
-  description: string;
+  scenario_group: string;
+  title: string;
   expected_category: string;
-  predicted_category: string;
-  category_correct: boolean;
-  extraction_correct: boolean;
-  expected_policy_action: string;
-  predicted_policy_action: string;
-  policy_correct: boolean;
-  confidence: number;
-  processing_ms: number;
-  prompt_injection_flag: boolean;
+  obtained_category: string;
+  category_match: boolean;
+  extraction_match: boolean;
+  expected_state: string;
+  obtained_state: string;
+  state_match: boolean;
+  requires_human: boolean;
+  duration_ms: number;
 }
 
 export interface EvaluationRunResult {
   total_cases: number;
-  correct_classifications: number;
   classification_accuracy_pct: number;
-  correct_extractions: number;
   extraction_accuracy_pct: number;
-  correct_policy_decisions: number;
   policy_compliance_pct: number;
+  correct_completion_rate_pct?: number;
+  human_intervention_rate_pct?: number;
   false_positives: number;
   false_negatives: number;
+  true_positives?: number;
+  true_negatives?: number;
   avg_processing_ms: number;
-  confusion_matrix: Record<string, Record<string, number>>;
+  total_suite_duration_ms?: number;
+  state_confusion_matrix: Record<string, Record<string, number>>;
+  state_labels?: string[];
   case_results: EvaluationCaseResult[];
   executed_at: string;
   mode_used: string;

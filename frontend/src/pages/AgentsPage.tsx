@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
-  Bot,
   ArrowRight,
   CheckCircle2,
-  Clock,
   Wrench,
   Code2,
   ShieldCheck,
   Activity,
+  Network,
 } from "lucide-react";
 import { flowpilotApi } from "../services/api";
 import {
@@ -36,11 +35,11 @@ export function AgentsPage() {
 
   if (isLoading || !data) {
     return (
-      <div className="space-y-6">
-        <SkeletonCard className="h-36" />
+      <div className="space-y-5">
+        <SkeletonCard className="h-32" />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
           {Array.from({ length: 5 }).map((_, i) => (
-            <SkeletonCard key={i} className="h-48" />
+            <SkeletonCard key={i} className="h-40" />
           ))}
         </div>
       </div>
@@ -52,26 +51,28 @@ export function AgentsPage() {
     agents.find((a) => a.agent_id === selectedAgentId) || agents[0];
 
   return (
-    <div className="space-y-6">
-      {/* Connected Multi-Agent Pipeline Visualizer */}
-      <Card className="overflow-hidden border-blue-500/25 bg-gradient-to-r from-[#11182E] via-[#131C38] to-[#11182E]">
+    <div className="space-y-5">
+      {/* Technical Workflow Architecture Diagram */}
+      <Card>
         <CardHeader>
-          <div>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Bot className="h-4 w-4 text-blue-400" />
-              Pipeline de Orquestração Multiagente (FSM Determinística)
-            </CardTitle>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Fluxo conectado com contratos estruturados, RBAC por ferramenta e auditoria cruzada no SQLite pelo Supervisor Agent
-            </p>
+          <div className="flex items-center gap-2">
+            <Network className="h-4 w-4 text-[#2457C5]" />
+            <div>
+              <CardTitle>
+                Pipeline Técnico de Orquestração Multiagente (FSM Determinística)
+              </CardTitle>
+              <p className="text-[11px] text-[#707783] mt-0.5">
+                Selecione qualquer estágio da cadeia para inspecionar responsabilidades, estado de execução, permissões RBAC e histórico persistido
+              </p>
+            </div>
           </div>
-          <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
-            5/5 Agentes Operacionais
+          <span className="rounded border border-[#24845A]/30 bg-[#24845A]/10 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[#24845A]">
+            5 / 5 MÓDULOS ATIVOS
           </span>
         </CardHeader>
 
         <CardContent>
-          <div className="flex flex-col items-stretch justify-between gap-3 lg:flex-row lg:items-center">
+          <div className="flex flex-col items-stretch justify-between gap-2.5 lg:flex-row lg:items-center">
             {agents.map((ag, index) => {
               const isSelected = ag.agent_id === activeAgent.agent_id;
               return (
@@ -82,40 +83,40 @@ export function AgentsPage() {
                       setSelectedStepJson(null);
                     }}
                     className={cn(
-                      "flex-1 cursor-pointer rounded-xl border p-4 transition-all duration-200",
+                      "flex-1 cursor-pointer rounded-md border p-3.5 transition-colors duration-150",
                       isSelected
-                        ? "border-blue-500 bg-blue-500/15 shadow-lg shadow-blue-950/50"
-                        : "border-slate-800 bg-[#0B1020]/90 hover:border-slate-700"
+                        ? "border-[#2457C5] bg-[#EAF0FC]/60"
+                        : "border-[#E1E5EA] bg-[#FFFFFF] hover:bg-[#F4F5F7]"
                     )}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="rounded-md bg-slate-800 px-2 py-0.5 font-mono text-[10px] font-semibold text-blue-300">
-                        ETAPA 0{ag.pipeline_order}
+                      <span className="rounded bg-[#F4F5F7] border border-[#E1E5EA] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[#2457C5]">
+                        STAGE 0{ag.pipeline_order}
                       </span>
-                      <span className="inline-flex items-center gap-1 text-[10px] font-medium text-emerald-400">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                      <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold text-[#24845A]">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#24845A]" />
                         {ag.status}
                       </span>
                     </div>
 
-                    <h4 className="mt-2.5 text-sm font-bold text-white">
+                    <h4 className="mt-2 text-xs font-bold text-[#20242B]">
                       {ag.name}
                     </h4>
-                    <p className="mt-1 text-[11px] text-slate-400 line-clamp-2">
+                    <p className="mt-1 text-[11px] text-[#707783] line-clamp-2">
                       {ag.responsibility}
                     </p>
 
-                    <div className="mt-3 flex items-center justify-between border-t border-slate-800/80 pt-2.5 text-[11px] text-slate-300">
-                      <span>{ag.total_executions} execuções</span>
-                      <span className="font-mono text-violet-300">
+                    <div className="mt-3 flex items-center justify-between border-t border-[#E1E5EA] pt-2 font-mono text-[10px] text-[#707783]">
+                      <span>{ag.total_executions} etapas</span>
+                      <span className="text-[#20242B] font-semibold">
                         {ag.avg_duration_ms.toFixed(1)} ms
                       </span>
                     </div>
                   </div>
 
                   {index < agents.length - 1 && (
-                    <div className="hidden lg:flex items-center justify-center text-slate-600">
-                      <ArrowRight className="h-5 w-5 text-blue-400/70" />
+                    <div className="hidden lg:flex items-center justify-center text-[#707783]">
+                      <ArrowRight className="h-4 w-4 text-[#2457C5]" />
                     </div>
                   )}
                 </React.Fragment>
@@ -125,68 +126,76 @@ export function AgentsPage() {
         </CardContent>
       </Card>
 
-      {/* Selected Agent Telemetry & Structured JSON Inspection */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        {/* Left Column: Agent Profile, RBAC Permissions & Recent Executions */}
+      {/* Selected Agent Details & Contract Inspector */}
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+        {/* Left: Telemetry, RBAC & Execution History Table */}
         <Card className="lg:col-span-7">
           <CardHeader>
             <div>
-              <CardTitle className="text-base">
-                {activeAgent.pipeline_order}. {activeAgent.name} — Telemetria & Histórico
+              <CardTitle>
+                Estágio 0{activeAgent.pipeline_order}: {activeAgent.name} — Telemetria & Histórico Operacional
               </CardTitle>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-[11px] text-[#707783] mt-0.5">
                 {activeAgent.responsibility}
               </p>
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-5">
-            {/* Telemetry Metrics */}
+          <CardContent className="space-y-4">
+            {/* Compact Metrics Row */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <div className="rounded-xl border border-slate-800 bg-[#0B1020] p-3">
-                <span className="text-[11px] text-slate-400">Total Execuções</span>
-                <div className="mt-1 text-lg font-bold text-white">
+              <div className="rounded-md border border-[#E1E5EA] bg-[#F4F5F7]/60 p-2.5">
+                <span className="text-[10px] font-semibold uppercase text-[#707783]">
+                  Etapas Processadas
+                </span>
+                <div className="mt-1 font-mono text-base font-bold text-[#20242B]">
                   {activeAgent.total_executions}
                 </div>
               </div>
-              <div className="rounded-xl border border-slate-800 bg-[#0B1020] p-3">
-                <span className="text-[11px] text-slate-400">Latência Média</span>
-                <div className="mt-1 font-mono text-lg font-bold text-violet-400">
+              <div className="rounded-md border border-[#E1E5EA] bg-[#F4F5F7]/60 p-2.5">
+                <span className="text-[10px] font-semibold uppercase text-[#707783]">
+                  Latência Média
+                </span>
+                <div className="mt-1 font-mono text-base font-bold text-[#2457C5]">
                   {activeAgent.avg_duration_ms.toFixed(2)} ms
                 </div>
               </div>
-              <div className="rounded-xl border border-slate-800 bg-[#0B1020] p-3">
-                <span className="text-[11px] text-slate-400">Erros Registrados</span>
-                <div className="mt-1 text-lg font-bold text-emerald-400">
+              <div className="rounded-md border border-[#E1E5EA] bg-[#F4F5F7]/60 p-2.5">
+                <span className="text-[10px] font-semibold uppercase text-[#707783]">
+                  Erros Registrados
+                </span>
+                <div className="mt-1 font-mono text-base font-bold text-[#24845A]">
                   {activeAgent.total_errors}
                 </div>
               </div>
-              <div className="rounded-xl border border-slate-800 bg-[#0B1020] p-3">
-                <span className="text-[11px] text-slate-400">Última Solicitação</span>
-                <div className="mt-1 font-mono text-sm font-bold text-blue-400">
+              <div className="rounded-md border border-[#E1E5EA] bg-[#F4F5F7]/60 p-2.5">
+                <span className="text-[10px] font-semibold uppercase text-[#707783]">
+                  Última Solicitação
+                </span>
+                <div className="mt-1 font-mono text-xs font-bold text-[#2457C5]">
                   {activeAgent.last_request_id || "—"}
                 </div>
               </div>
             </div>
 
-            {/* RBAC Allowed Tools */}
-            <div className="rounded-xl border border-slate-800 bg-[#0B1020] p-4">
-              <div className="flex items-center gap-2 text-xs font-semibold text-slate-200">
-                <Wrench className="h-3.5 w-3.5 text-blue-400" />
-                Permissões RBAC de Ferramentas (Least Privilege)
+            {/* RBAC Tool Permissions */}
+            <div className="rounded-md border border-[#E1E5EA] bg-[#FFFFFF] p-3">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#20242B]">
+                <Wrench className="h-3.5 w-3.5 text-[#2457C5]" />
+                Escopo de Ferramentas Autorizadas (RBAC)
               </div>
-              <div className="mt-2.5 flex flex-wrap gap-2">
+              <div className="mt-2 flex flex-wrap gap-1.5">
                 {activeAgent.allowed_tools.length === 0 ? (
-                  <span className="rounded-lg border border-slate-800 bg-slate-900 px-3 py-1 text-xs text-slate-400">
-                    Nenhuma ferramenta externa permitida (Agente de Análise/Decisão Pura)
+                  <span className="rounded border border-[#E1E5EA] bg-[#F4F5F7] px-2.5 py-1 text-[11px] text-[#707783]">
+                    Sem invocação direta de ferramentas (Módulo de Análise / Validação Determinística)
                   </span>
                 ) : (
                   activeAgent.allowed_tools.map((tool) => (
                     <span
                       key={tool}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-blue-500/30 bg-blue-500/10 px-2.5 py-1 font-mono text-xs text-blue-300"
+                      className="inline-flex items-center gap-1 rounded border border-[#2457C5]/30 bg-[#EAF0FC] px-2 py-0.5 font-mono text-[11px] text-[#2457C5]"
                     >
-                      <ShieldCheck className="h-3.5 w-3.5 text-blue-400" />
+                      <ShieldCheck className="h-3 w-3" />
                       {tool}
                     </span>
                   ))
@@ -194,76 +203,79 @@ export function AgentsPage() {
               </div>
             </div>
 
-            {/* Recent Steps List */}
-            <div className="space-y-2.5">
-              <div className="text-xs font-semibold text-slate-300">
-                Últimas Execuções Persistidas (Clique para inspecionar o JSON)
+            {/* Historical Executions Table */}
+            <div>
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-[#707783] mb-2">
+                Histórico de Atividades do Agente (Clique para inspecionar saída JSON)
               </div>
-              <div className="max-h-80 space-y-2 overflow-y-auto pr-1">
-                {activeAgent.recent_history.map((step) => (
-                  <div
-                    key={step.step_id}
-                    onClick={() => setSelectedStepJson(step.output_json)}
-                    className="cursor-pointer rounded-xl border border-slate-800 bg-[#0B1020] p-3 hover:border-blue-500/50 transition-all"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
-                        <span className="font-mono text-xs font-semibold text-blue-400">
-                          {step.request_id}
-                        </span>
-                        <span className="text-xs font-medium text-slate-200 truncate max-w-[220px]">
-                          {step.request_title}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-[11px] text-slate-400">
+              <div className="max-h-72 overflow-y-auto border border-[#E1E5EA] rounded-md">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="border-b border-[#E1E5EA] bg-[#F4F5F7] text-[10px] font-semibold uppercase text-[#707783]">
+                      <th className="py-2 px-3">Req ID</th>
+                      <th className="py-2 px-3">Resultado Operacional</th>
+                      <th className="py-2 px-3">Tempo</th>
+                      <th className="py-2 px-3 text-right">Monitor</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#E1E5EA]">
+                    {activeAgent.recent_history.map((step) => (
+                      <tr
+                        key={step.step_id}
+                        onClick={() => setSelectedStepJson(step.output_json)}
+                        className="cursor-pointer hover:bg-[#F4F5F7] transition-colors"
+                      >
+                        <td className="py-2 px-3 font-mono font-semibold text-[#2457C5] whitespace-nowrap">
+                          <span className="inline-flex items-center gap-1">
+                            <CheckCircle2 className="h-3 w-3 text-[#24845A]" />
+                            {step.request_id}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3 text-[#20242B] max-w-[260px] truncate">
+                          {step.decision_summary}
+                          <div className="text-[10px] text-[#707783]">
+                            {formatDateTimeBR(step.created_at)} • Modo {step.operation_mode}
+                          </div>
+                        </td>
+                        <td className="py-2 px-3 font-mono text-[11px] text-[#707783] whitespace-nowrap">
                           {step.duration_ms} ms
-                        </span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/monitor?request_id=${step.request_id}`);
-                          }}
-                        >
-                          <Activity className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </div>
-                    <p className="mt-1 text-xs text-slate-300">
-                      {step.decision_summary}
-                    </p>
-                    <div className="mt-1.5 flex items-center justify-between text-[10px] text-slate-500">
-                      <span>Modo: {step.operation_mode}</span>
-                      <span>
-                        <Clock className="inline h-3 w-3 mr-1" />
-                        {formatDateTimeBR(step.created_at)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                        </td>
+                        <td className="py-2 px-3 text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/monitor?request_id=${step.request_id}`);
+                            }}
+                          >
+                            <Activity className="h-3.5 w-3.5 text-[#2457C5]" />
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Right Column: Structured JSON Output Inspector */}
+        {/* Right: Structured JSON Contract Inspector */}
         <Card className="lg:col-span-5">
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Code2 className="h-4 w-4 text-violet-400" />
+              <Code2 className="h-4 w-4 text-[#2457C5]" />
               <div>
-                <CardTitle>Inspetor de Contrato JSON Estruturado</CardTitle>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Saída real validada por schema Pydantic v2 do {activeAgent.name}
+                <CardTitle>Inspetor de Contrato Estruturado (Pydantic v2 JSON)</CardTitle>
+                <p className="text-[11px] text-[#707783] mt-0.5">
+                  Payload de saída persistido para {activeAgent.name}
                 </p>
               </div>
             </div>
           </CardHeader>
           <CardContent>
-            <pre className="max-h-[520px] overflow-auto rounded-xl border border-slate-800 bg-[#070B16] p-4 font-mono text-xs text-blue-300 leading-relaxed">
+            <pre className="max-h-[480px] overflow-auto rounded-md border border-[#E1E5EA] bg-[#F4F5F7] p-3.5 font-mono text-[11px] text-[#20242B] leading-relaxed">
               {(() => {
                 const rawJson =
                   selectedStepJson ||

@@ -4,20 +4,20 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard,
   FileText,
-  Bot,
+  Network,
   Activity,
   ShieldCheck,
-  FlaskConical,
-  BarChart3,
+  ClipboardCheck,
+  BarChart2,
   Settings,
-  Cpu,
   Database,
   RefreshCw,
   Trash2,
   Menu,
   X,
   CheckCircle2,
-  AlertTriangle,
+  AlertCircle,
+  Layers,
 } from "lucide-react";
 import { flowpilotApi } from "../../services/api";
 import { Button } from "../ui/Primitives";
@@ -26,7 +26,7 @@ import { cn } from "../../lib/utils";
 const NAV_ITEMS = [
   {
     to: "/",
-    label: "Dashboard Executivo",
+    label: "Dashboard Operacional",
     icon: LayoutDashboard,
     badgeKey: null,
   },
@@ -39,7 +39,7 @@ const NAV_ITEMS = [
   {
     to: "/agents",
     label: "Central de Agentes",
-    icon: Bot,
+    icon: Network,
     badgeKey: null,
   },
   {
@@ -57,13 +57,13 @@ const NAV_ITEMS = [
   {
     to: "/evaluation",
     label: "Evaluation Lab",
-    icon: FlaskConical,
+    icon: ClipboardCheck,
     badgeKey: null,
   },
   {
     to: "/analytics",
     label: "Analytics & Relatórios",
-    icon: BarChart3,
+    icon: BarChart2,
     badgeKey: null,
   },
   {
@@ -91,7 +91,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     onSuccess: (res) => {
       queryClient.invalidateQueries();
       setFeedbackBanner(
-        `Ambiente de demonstração recarregado (${res.loaded_count ?? 22} solicitações ativas).`
+        `Dados operacionais de demonstração recarregados (${res.loaded_count ?? 22} solicitações).`
       );
       setTimeout(() => setFeedbackBanner(null), 4000);
     },
@@ -102,7 +102,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     onSuccess: (res) => {
       queryClient.invalidateQueries();
       setFeedbackBanner(
-        `${res.removed_count} registros de demonstração removidos. Solicitações reais preservadas.`
+        `${res.removed_count} solicitações de demonstração removidas. Registros reais mantidos.`
       );
       setTimeout(() => setFeedbackBanner(null), 4000);
     },
@@ -114,46 +114,46 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     ) || NAV_ITEMS[0];
 
   return (
-    <div className="flex min-h-screen bg-[#0B1020] text-slate-100">
-      {/* Sidebar Desktop & Mobile Drawer */}
+    <div className="flex min-h-screen bg-[#F4F5F7] text-[#20242B]">
+      {/* Compact Enterprise Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-slate-800/80 bg-[#070B16] transition-transform duration-200 lg:static lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex w-60 flex-col border-r border-[#E1E5EA] bg-[#FFFFFF] transition-transform duration-150 lg:static lg:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         {/* Brand Header */}
-        <div className="flex items-center justify-between border-b border-slate-800/80 px-5 py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 shadow-md shadow-blue-950/60">
-              <Cpu className="h-5 w-5 text-white" />
+        <div className="flex h-14 items-center justify-between border-b border-[#E1E5EA] px-4">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-7 w-7 items-center justify-center rounded bg-[#2457C5] text-white">
+              <Layers className="h-4 w-4" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="text-sm font-bold tracking-tight text-white">
+                <span className="text-sm font-bold tracking-tight text-[#20242B]">
                   FlowPilot
                 </span>
-                <span className="rounded bg-blue-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-blue-300 border border-blue-500/30">
-                  AI
+                <span className="rounded bg-[#EAF0FC] px-1.5 py-0.5 text-[10px] font-semibold text-[#2457C5]">
+                  OPS
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400">
-                Agentic Operations Suite
+              <p className="text-[10px] text-[#707783] leading-none">
+                Workflow & Governance
               </p>
             </div>
           </div>
           <button
             onClick={() => setMobileOpen(false)}
-            className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 lg:hidden"
+            className="rounded p-1 text-[#707783] hover:bg-[#F4F5F7] lg:hidden"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-          <div className="px-2.5 pb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-            Plataforma Operacional
+        <nav className="flex-1 space-y-0.5 overflow-y-auto px-2.5 py-3">
+          <div className="px-2.5 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#707783]">
+            Módulos Operacionais
           </div>
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
@@ -172,10 +172,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 onClick={() => setMobileOpen(false)}
                 className={({ isActive }) =>
                   cn(
-                    "group flex items-center justify-between rounded-xl px-3 py-2.5 text-xs font-medium transition-all duration-150",
+                    "group flex items-center justify-between rounded-md px-2.5 py-2 text-xs font-medium transition-colors duration-150",
                     isActive
-                      ? "bg-gradient-to-r from-blue-600/20 to-violet-600/10 text-blue-300 border border-blue-500/30 shadow-sm"
-                      : "text-slate-400 hover:bg-slate-900/80 hover:text-slate-200 border border-transparent"
+                      ? "bg-[#EAF0FC] text-[#2457C5] font-semibold"
+                      : "text-[#707783] hover:bg-[#F4F5F7] hover:text-[#20242B]"
                   )
                 }
               >
@@ -186,10 +186,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 {badgeCount !== null && badgeCount !== undefined && badgeCount > 0 && (
                   <span
                     className={cn(
-                      "rounded-full px-2 py-0.5 text-[10px] font-semibold",
+                      "rounded px-1.5 py-0.5 font-mono text-[10px] font-semibold",
                       item.badgeKey === "pending_approvals"
-                        ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                        : "bg-slate-800 text-slate-300"
+                        ? "bg-[#B98220]/15 text-[#B98220]"
+                        : "bg-[#F4F5F7] text-[#20242B] border border-[#E1E5EA]"
                     )}
                   >
                     {badgeCount}
@@ -200,32 +200,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        {/* Footer Telemetry & Demo Controls */}
-        <div className="border-t border-slate-800/80 p-4 space-y-3">
-          <div className="rounded-xl border border-slate-800/90 bg-[#0B1020] p-3">
+        {/* Environment & Database Status Footer */}
+        <div className="border-t border-[#E1E5EA] p-3 space-y-2.5 bg-[#F4F5F7]/50">
+          <div className="rounded-md border border-[#E1E5EA] bg-[#FFFFFF] p-2.5">
             <div className="flex items-center justify-between text-[11px]">
-              <span className="text-slate-400 flex items-center gap-1.5">
-                <Database className="h-3.5 w-3.5 text-blue-400" />
-                Motor IA Ativo
+              <span className="text-[#707783] flex items-center gap-1.5 font-medium">
+                <Database className="h-3.5 w-3.5 text-[#2457C5]" />
+                Motor de Execução
               </span>
-              <span
-                className={cn(
-                  "rounded px-1.5 py-0.5 text-[10px] font-semibold",
-                  health?.effective_mode === "LLM"
-                    ? "bg-violet-500/20 text-violet-300 border border-violet-500/30"
-                    : "bg-blue-500/15 text-blue-300 border border-blue-500/30"
-                )}
-              >
-                {health?.effective_mode === "LLM" ? "MODO LLM" : "MODO LOCAL"}
+              <span className="rounded bg-[#EAF0FC] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[#2457C5]">
+                {health?.effective_mode === "LLM" ? "LLM API" : "LOCAL"}
               </span>
             </div>
-            <p className="mt-1.5 truncate text-[11px] font-mono text-slate-400">
-              {health?.mode_badge || "Motor Determinístico Local"}
-            </p>
-            <div className="mt-2.5 flex items-center justify-between border-t border-slate-800/80 pt-2 text-[10px] text-slate-400">
+            <div className="mt-2 flex items-center justify-between border-t border-[#E1E5EA] pt-1.5 text-[10px] text-[#707783] font-mono">
               <span>Demo: {health?.demo_requests ?? 0}</span>
               <span>Reais: {health?.real_requests ?? 0}</span>
-              <span className="text-emerald-400">SQLite WAL</span>
+              <span className="text-[#24845A] font-semibold">SQLite WAL</span>
             </div>
           </div>
 
@@ -235,22 +225,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               size="sm"
               onClick={() => loadDemoMutation.mutate()}
               disabled={loadDemoMutation.isPending}
-              title="Recarregar as 22 solicitações de demonstração"
+              title="Recarregar solicitações de demonstração"
             >
               <RefreshCw
                 className={cn("h-3 w-3", loadDemoMutation.isPending && "animate-spin")}
               />
-              Demo
+              Carregar Demo
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={() => clearDemoMutation.mutate()}
               disabled={clearDemoMutation.isPending}
-              title="Limpar apenas dados de demonstração"
+              title="Remover dados de demonstração"
             >
-              <Trash2 className="h-3 w-3 text-rose-400" />
-              Limpar
+              <Trash2 className="h-3 w-3 text-[#C44F4F]" />
+              Limpar Demo
             </Button>
           </div>
         </div>
@@ -258,53 +248,56 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col min-w-0">
-        {/* Top Header */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-800/80 bg-[#0B1020]/90 px-6 backdrop-blur-md">
+        {/* Top Enterprise Header with Environment Identification */}
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-[#E1E5EA] bg-[#FFFFFF] px-6">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
-              className="rounded-lg p-2 text-slate-400 hover:bg-slate-800 lg:hidden"
+              className="rounded p-1.5 text-[#707783] hover:bg-[#F4F5F7] lg:hidden"
             >
               <Menu className="h-5 w-5" />
             </button>
-            <div>
-              <h1 className="text-base font-semibold tracking-tight text-white">
+            <div className="flex items-center gap-3">
+              <h1 className="text-sm font-semibold text-[#20242B]">
                 {currentPage.label}
               </h1>
-              <p className="hidden text-xs text-slate-400 sm:block">
-                Orquestração Multiagente com Máquina de Estados Finita (FSM) & Auditoria Cruzada SQLite
-              </p>
+              <span className="hidden md:inline-block text-[#E1E5EA]">|</span>
+              <span className="hidden md:inline-block text-xs text-[#707783]">
+                Orquestração de Processos Administrativos & Governança Operacional
+              </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             {health?.pending_approvals ? (
               <NavLink
                 to="/approvals"
-                className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-300 hover:bg-amber-500/20 transition-colors"
+                className="hidden sm:inline-flex items-center gap-1.5 rounded border border-[#B98220]/30 bg-[#B98220]/10 px-2.5 py-1 text-xs font-medium text-[#B98220] hover:bg-[#B98220]/15 transition-colors"
               >
-                <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
+                <AlertCircle className="h-3.5 w-3.5" />
                 {health.pending_approvals} Aprovações Pendentes
               </NavLink>
             ) : null}
 
-            <div className="flex items-center gap-2 rounded-full border border-slate-800 bg-[#11182E] px-3 py-1.5 text-xs text-slate-300">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="font-medium">5 Agentes Online</span>
+            <div className="flex items-center gap-2 rounded border border-[#E1E5EA] bg-[#F4F5F7] px-2.5 py-1 text-xs text-[#20242B]">
+              <span className="h-2 w-2 rounded-full bg-[#24845A]" />
+              <span className="font-mono text-[11px] font-medium">
+                ENV: {health?.effective_mode === "LLM" ? "EXT-LLM" : "DETERMINISTIC-LOCAL"}
+              </span>
             </div>
           </div>
         </header>
 
-        {/* Feedback Toast Banner */}
+        {/* Feedback Banner */}
         {feedbackBanner && (
-          <div className="mx-6 mt-4 flex items-center justify-between rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2.5 text-xs text-emerald-200">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+          <div className="mx-6 mt-4 flex items-center justify-between rounded-md border border-[#24845A]/30 bg-[#24845A]/10 px-4 py-2 text-xs text-[#24845A]">
+            <div className="flex items-center gap-2 font-medium">
+              <CheckCircle2 className="h-4 w-4" />
               <span>{feedbackBanner}</span>
             </div>
             <button
               onClick={() => setFeedbackBanner(null)}
-              className="text-emerald-300 hover:text-white"
+              className="hover:opacity-75"
             >
               ✕
             </button>
@@ -312,7 +305,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         )}
 
         {/* Page Body */}
-        <main className="flex-1 p-6 space-y-6 max-w-[1600px] w-full mx-auto">
+        <main className="flex-1 p-6 space-y-5 max-w-[1600px] w-full mx-auto">
           {children}
         </main>
       </div>

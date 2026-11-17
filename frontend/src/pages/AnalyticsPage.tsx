@@ -8,18 +8,13 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
-  Cell,
-  PieChart,
-  Pie,
-  Legend,
 } from "recharts";
 import {
-  BarChart3,
+  BarChart2,
   Download,
   FileText,
   Calculator,
   Info,
-  TrendingUp,
   Building2,
   Sliders,
 } from "lucide-react";
@@ -32,15 +27,6 @@ import {
   Button,
   SkeletonCard,
 } from "../components/ui/Primitives";
-
-const COLORS = [
-  "#3B82F6",
-  "#7C3AED",
-  "#10B981",
-  "#F59E0B",
-  "#06B6D4",
-  "#F43F5E",
-];
 
 export function AnalyticsPage() {
   const queryClient = useQueryClient();
@@ -68,11 +54,11 @@ export function AnalyticsPage() {
 
   if (isLoading || !data) {
     return (
-      <div className="space-y-6">
-        <SkeletonCard className="h-48" />
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <SkeletonCard className="h-80" />
-          <SkeletonCard className="h-80" />
+      <div className="space-y-4">
+        <SkeletonCard className="h-40" />
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+          <SkeletonCard className="h-72" />
+          <SkeletonCard className="h-72" />
         </div>
       </div>
     );
@@ -82,7 +68,7 @@ export function AnalyticsPage() {
   const sim = metrics.impact_simulation;
 
   const statusData = Object.entries(metrics.status_distribution || {}).map(
-    ([name, value]) => ({ name, value })
+    ([name, count]) => ({ name, Quantidade: count })
   );
 
   const agentPerfData = metrics.agent_volume.map((a) => ({
@@ -92,37 +78,35 @@ export function AnalyticsPage() {
   }));
 
   return (
-    <div className="space-y-6">
-      {/* Top Export Header */}
+    <div className="space-y-5">
+      {/* Header & Exports */}
       <Card>
-        <CardContent className="p-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-3">
-            <div className="rounded-xl bg-violet-500/20 p-2.5 border border-violet-500/30">
-              <BarChart3 className="h-5 w-5 text-violet-400" />
-            </div>
+        <CardContent className="p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-2.5">
+            <BarChart2 className="h-5 w-5 text-[#2457C5] shrink-0 mt-0.5" />
             <div>
-              <h2 className="text-base font-bold text-white">
-                Analytics Operacional, Simulador de Impacto & Relatórios Executivos
+              <h2 className="text-sm font-bold text-[#20242B]">
+                Analytics Operacional & Exportação de Relatórios
               </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Separação transparente entre métricas reais medidas no SQLite e estimativas configuráveis de economia de tempo manual
+              <p className="text-xs text-[#707783] mt-0.5">
+                Indicadores extraídos das tabelas SQLite e simulador configurável de cenário operacional
               </p>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
             <a
               href={flowpilotApi.getExportCsvUrl()}
               download
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900 px-3.5 py-2 text-xs font-medium text-slate-200 hover:bg-slate-800 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-md border border-[#E1E5EA] bg-[#FFFFFF] px-3 py-1.5 text-xs font-medium text-[#20242B] hover:bg-[#F4F5F7] transition-colors"
             >
-              <Download className="h-3.5 w-3.5 text-blue-400" />
+              <Download className="h-3.5 w-3.5 text-[#2457C5]" />
               Exportar Solicitações (CSV)
             </a>
             <a
               href={flowpilotApi.getExportPdfUrl()}
               download
-              className="inline-flex items-center gap-1.5 rounded-xl border border-blue-500/40 bg-blue-600 px-3.5 py-2 text-xs font-medium text-white hover:bg-blue-500 transition-colors shadow-sm"
+              className="inline-flex items-center gap-1.5 rounded-md border border-[#2457C5] bg-[#2457C5] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#1D48A6] transition-colors"
             >
               <FileText className="h-3.5 w-3.5" />
               Relatório Executivo (PDF)
@@ -131,46 +115,179 @@ export function AnalyticsPage() {
         </CardContent>
       </Card>
 
-      {/* Interactive Business Impact Simulator */}
-      <Card className="border-blue-500/30">
+      {/* Department & FSM Distribution Charts */}
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+        <Card className="lg:col-span-6">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Building2 className="h-4 w-4 text-[#2457C5]" />
+              <div>
+                <CardTitle>Demanda por Departamento Solicitante</CardTitle>
+                <p className="text-[11px] text-[#707783] mt-0.5">
+                  Contagem real agrupada por área organizacional
+                </p>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={department_distribution}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#E1E5EA" />
+                <XAxis dataKey="department" stroke="#707783" fontSize={11} />
+                <YAxis stroke="#707783" fontSize={11} allowDecimals={false} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#FFFFFF",
+                    borderColor: "#E1E5EA",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    color: "#20242B",
+                  }}
+                />
+                <Bar
+                  dataKey="count"
+                  name="Solicitações"
+                  fill="#2457C5"
+                  radius={[3, 3, 0, 0]}
+                  isAnimationActive={false}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="lg:col-span-6">
+          <CardHeader>
+            <CardTitle>Distribuição por Estado da Máquina de Estados (FSM)</CardTitle>
+          </CardHeader>
+          <CardContent className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={statusData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#E1E5EA" />
+                <XAxis dataKey="name" stroke="#707783" fontSize={10} />
+                <YAxis stroke="#707783" fontSize={11} allowDecimals={false} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#FFFFFF",
+                    borderColor: "#E1E5EA",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    color: "#20242B",
+                  }}
+                />
+                <Bar
+                  dataKey="Quantidade"
+                  fill="#24845A"
+                  radius={[3, 3, 0, 0]}
+                  isAnimationActive={false}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Agent Volume & Rejection Reasons */}
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+        <Card className="lg:col-span-7">
+          <CardHeader>
+            <CardTitle>Volume de Etapas Processadas por Agente</CardTitle>
+          </CardHeader>
+          <CardContent className="h-60">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={agentPerfData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#E1E5EA" />
+                <XAxis dataKey="name" stroke="#707783" fontSize={11} />
+                <YAxis stroke="#707783" fontSize={11} allowDecimals={false} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#FFFFFF",
+                    borderColor: "#E1E5EA",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    color: "#20242B",
+                  }}
+                />
+                <Bar
+                  dataKey="Execucoes"
+                  name="Total Execuções"
+                  fill="#2457C5"
+                  radius={[3, 3, 0, 0]}
+                  isAnimationActive={false}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="lg:col-span-5">
+          <CardHeader>
+            <CardTitle>Principais Motivos de Bloqueio / Rejeição</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {Object.entries(metrics.rejection_reasons || {}).length === 0 ? (
+              <p className="text-xs text-[#707783]">
+                Nenhuma rejeição registrada.
+              </p>
+            ) : (
+              Object.entries(metrics.rejection_reasons).map(
+                ([reason, count]) => (
+                  <div
+                    key={reason}
+                    className="flex items-center justify-between rounded border border-[#E1E5EA] bg-[#F4F5F7] p-2.5 text-xs"
+                  >
+                    <span className="text-[#20242B] truncate pr-3">
+                      {reason}
+                    </span>
+                    <span className="rounded border border-[#C44F4F]/30 bg-[#C44F4F]/10 px-2 py-0.5 font-mono font-bold text-[#C44F4F]">
+                      {count}
+                    </span>
+                  </div>
+                )
+              )
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Configurable Operational Scenario Simulator */}
+      <Card>
         <CardHeader>
           <div className="flex items-center gap-2">
-            <Calculator className="h-4 w-4 text-blue-400" />
+            <Calculator className="h-4 w-4 text-[#2457C5]" />
             <div>
               <CardTitle>
-                Simulador Configurável de Impacto Empresarial (ROI Operacional)
+                Simulador Configurável de Cenário Operacional (Estimativa vs. Tempo Medido)
               </CardTitle>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Fórmula auditável: Economia Estimada = (Solicitações × Tempo Manual Estimado) − (Execução Automatizada Medida + Revisões Humanas × Tempo Médio de Revisão)
+              <p className="text-[11px] text-[#707783] mt-0.5">
+                Compara o tempo real de execução medido no SQLite contra parâmetros configuráveis de triagem manual
               </p>
             </div>
           </div>
-          <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[11px] font-medium text-amber-300">
-            Estimativa Configurável vs Tempo Real Medido
+          <span className="rounded border border-[#B98220]/30 bg-[#B98220]/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase text-[#B98220]">
+            Simulação Configurável
           </span>
         </CardHeader>
 
-        <CardContent className="space-y-5">
-          {/* Disclaimer Banner */}
-          <div className="flex items-start gap-2.5 rounded-xl border border-blue-500/25 bg-blue-500/5 p-3.5 text-xs text-slate-300">
-            <Info className="h-4 w-4 text-blue-400 shrink-0 mt-0.5" />
+        <CardContent className="space-y-4">
+          <div className="flex items-start gap-2 rounded border border-[#E1E5EA] bg-[#F4F5F7] p-3 text-xs text-[#707783]">
+            <Info className="h-4 w-4 text-[#2457C5] shrink-0 mt-0.5" />
             <span>{sim.disclaimer}</span>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-            {/* Simulator Controls */}
-            <div className="lg:col-span-5 rounded-xl border border-slate-800 bg-[#0B1020] p-4 space-y-4">
-              <div className="flex items-center gap-2 text-xs font-semibold text-white">
-                <Sliders className="h-3.5 w-3.5 text-blue-400" />
-                Parâmetros de Simulação (Ajustáveis)
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+            <div className="lg:col-span-5 rounded border border-[#E1E5EA] bg-[#F4F5F7]/60 p-3.5 space-y-3.5">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#20242B]">
+                <Sliders className="h-3.5 w-3.5 text-[#2457C5]" />
+                Parâmetros Hipotéticos de Triagem Manual
               </div>
 
               <div>
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-slate-300">
-                    Tempo Manual Estimado por Solicitação (min)
+                  <span className="text-[#707783]">
+                    Tempo Manual Estimado / Solicitação
                   </span>
-                  <span className="font-mono font-bold text-blue-400">
+                  <span className="font-mono font-bold text-[#20242B]">
                     {manualMin} min
                   </span>
                 </div>
@@ -181,16 +298,16 @@ export function AnalyticsPage() {
                   step={1}
                   value={manualMin}
                   onChange={(e) => setManualMin(Number(e.target.value))}
-                  className="w-full accent-blue-500"
+                  className="w-full accent-[#2457C5]"
                 />
               </div>
 
               <div>
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-slate-300">
-                    Tempo Médio por Revisão Humana (min)
+                  <span className="text-[#707783]">
+                    Tempo Estimado / Revisão Humana
                   </span>
-                  <span className="font-mono font-bold text-violet-400">
+                  <span className="font-mono font-bold text-[#20242B]">
                     {reviewMin} min
                   </span>
                 </div>
@@ -201,7 +318,7 @@ export function AnalyticsPage() {
                   step={0.5}
                   value={reviewMin}
                   onChange={(e) => setReviewMin(Number(e.target.value))}
-                  className="w-full accent-violet-500"
+                  className="w-full accent-[#2457C5]"
                 />
               </div>
 
@@ -217,182 +334,50 @@ export function AnalyticsPage() {
                 }
                 disabled={impactMutation.isPending}
               >
-                Recalcular Simulação no Servidor Python
+                Atualizar Parâmetros de Simulação
               </Button>
             </div>
 
-            {/* Simulator Results Comparison */}
-            <div className="lg:col-span-7 grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <div className="rounded-xl border border-slate-800 bg-[#0B1020] p-4">
-                <span className="text-[11px] uppercase text-amber-400 font-semibold">
-                  Esforço Manual (Estimado)
+            <div className="lg:col-span-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="rounded border border-[#E1E5EA] bg-[#FFFFFF] p-3.5">
+                <span className="text-[10px] uppercase text-[#707783] font-semibold">
+                  Execução Automatizada (Medida)
                 </span>
-                <div className="mt-2 text-2xl font-bold text-white">
+                <div className="mt-1.5 font-mono text-xl font-bold text-[#2457C5]">
+                  {(metrics.total_processing_ms / 1000).toFixed(2)} s
+                </div>
+                <p className="mt-1 text-[11px] text-[#707783]">
+                  Tempo real acumulado dos 5 agentes no SQLite
+                </p>
+              </div>
+
+              <div className="rounded border border-[#E1E5EA] bg-[#FFFFFF] p-3.5">
+                <span className="text-[10px] uppercase text-[#707783] font-semibold">
+                  Cenário Manual (Estimado)
+                </span>
+                <div className="mt-1.5 font-mono text-xl font-bold text-[#20242B]">
                   {sim.estimated_manual_hours} h
                 </div>
-                <p className="mt-1 text-xs text-slate-400">
-                  {sim.estimated_manual_minutes} min totais ({sim.request_count} solicitações × {sim.manual_minutes_per_request}m)
+                <p className="mt-1 text-[11px] text-[#707783]">
+                  {sim.request_count} solicitações × {sim.manual_minutes_per_request}m
                 </p>
               </div>
 
-              <div className="rounded-xl border border-slate-800 bg-[#0B1020] p-4">
-                <span className="text-[11px] uppercase text-blue-400 font-semibold">
-                  Tempo Total c/ FlowPilot
+              <div className="rounded border border-[#E1E5EA] bg-[#FFFFFF] p-3.5">
+                <span className="text-[10px] uppercase text-[#707783] font-semibold">
+                  Cenário Híbrido (Simulado)
                 </span>
-                <div className="mt-2 text-2xl font-bold text-white">
+                <div className="mt-1.5 font-mono text-xl font-bold text-[#24845A]">
                   {sim.total_automated_hours} h
                 </div>
-                <p className="mt-1 text-xs text-slate-400">
-                  IA medida: {(metrics.total_processing_ms / 1000).toFixed(2)}s + {sim.human_review_count} revisões ({sim.human_review_total_minutes}m)
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
-                <span className="text-[11px] uppercase text-emerald-300 font-semibold flex items-center gap-1">
-                  <TrendingUp className="h-3.5 w-3.5" /> Economia Projetada
-                </span>
-                <div className="mt-2 text-2xl font-bold text-emerald-300">
-                  {sim.estimated_saved_hours} h ({sim.time_reduction_pct}%)
-                </div>
-                <p className="mt-1 text-xs text-emerald-200/80">
-                  {sim.estimated_saved_minutes} minutos poupados na operação
+                <p className="mt-1 text-[11px] text-[#707783]">
+                  Inclui {sim.human_review_count} intervenções humanas ({sim.human_review_total_minutes}m)
                 </p>
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
-
-      {/* Charts Row: Department Distribution & Status Breakdown */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        {/* Distribuição por Departamento */}
-        <Card className="lg:col-span-6">
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <Building2 className="h-4 w-4 text-blue-400" />
-              <div>
-                <CardTitle>Distribuição por Departamento Solicitante</CardTitle>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Demanda administrativa real agrupada por área de negócio
-                </p>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={department_distribution}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
-                <XAxis dataKey="department" stroke="#94A3B8" fontSize={11} />
-                <YAxis stroke="#64748B" fontSize={11} allowDecimals={false} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#0E1529",
-                    borderColor: "#1E293B",
-                    borderRadius: "10px",
-                    fontSize: "12px",
-                  }}
-                />
-                <Bar dataKey="count" name="Solicitações" radius={[6, 6, 0, 0]}>
-                  {department_distribution.map((_, i) => (
-                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Distribuição por Estado FSM */}
-        <Card className="lg:col-span-6">
-          <CardHeader>
-            <CardTitle>Distribuição por Estado da Máquina de Estados (FSM)</CardTitle>
-          </CardHeader>
-          <CardContent className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={statusData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={55}
-                  outerRadius={90}
-                  paddingAngle={3}
-                >
-                  {statusData.map((_, i) => (
-                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#0E1529",
-                    borderColor: "#1E293B",
-                    borderRadius: "10px",
-                    fontSize: "12px",
-                  }}
-                />
-                <Legend wrapperStyle={{ fontSize: "11px" }} />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Agent Volume & Rejection Reasons */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        <Card className="lg:col-span-7">
-          <CardHeader>
-            <CardTitle>Desempenho e Volume de Execuções por Agente</CardTitle>
-          </CardHeader>
-          <CardContent className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={agentPerfData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
-                <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} />
-                <YAxis stroke="#64748B" fontSize={11} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#0E1529",
-                    borderColor: "#1E293B",
-                    borderRadius: "10px",
-                    fontSize: "12px",
-                  }}
-                />
-                <Bar
-                  dataKey="Execucoes"
-                  name="Total Execuções"
-                  fill="#3B82F6"
-                  radius={[6, 6, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card className="lg:col-span-5">
-          <CardHeader>
-            <CardTitle>Principais Motivos de Bloqueio / Rejeição</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {Object.entries(metrics.rejection_reasons || {}).length === 0 ? (
-              <p className="text-xs text-slate-400">Nenhuma rejeição registrada.</p>
-            ) : (
-              Object.entries(metrics.rejection_reasons).map(([reason, count]) => (
-                <div
-                  key={reason}
-                  className="flex items-center justify-between rounded-xl border border-slate-800 bg-[#0B1020] p-3 text-xs"
-                >
-                  <span className="text-slate-200 truncate pr-3">{reason}</span>
-                  <span className="rounded-full bg-rose-500/20 px-2.5 py-0.5 font-mono font-bold text-rose-300 border border-rose-500/30">
-                    {count}
-                  </span>
-                </div>
-              ))
-            )}
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }
